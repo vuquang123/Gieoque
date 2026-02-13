@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "echo Run 'vercel dev --yes --listen 3000' directly to avoid recursion",
+    "dev": "node server.js",
     "vercel-dev": "vercel dev --yes --listen 3000"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "google-auth-library": "^9.14.1"
   }
 }
