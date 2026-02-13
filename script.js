@@ -24,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageEl = document.getElementById("voucherMessage");
   const wishEl = document.getElementById("voucherWish");
   const closeBtn = document.getElementById("closeModal");
-  const claimZaloBtn = document.getElementById("claimZalo");
-  const checkoutBtn = document.getElementById("checkoutNow");
+  const closeModalActionBtn = document.getElementById("closeModalAction");
   const envelope = document.getElementById("envelope");
   const overlay = modal.querySelector("[data-close]");
   const rulesSection = document.getElementById("rules");
@@ -99,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fortuneScene.classList.add("shake-strong");
     setTimeout(() => {
       fortuneScene.classList.remove("shake-strong");
-    }, 1000);
+    }, 3000);
   }
 
   function setDrawButtonState(disabled, label) {
@@ -128,8 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isSubmitting) return;
     const name = nameInput?.value.trim();
     const phone = phoneInput?.value.trim();
+    const phoneDigits = (phone || "").replace(/\D/g, "");
     if (!name || !phone) {
       setStatus("Nhập họ tên và SĐT để lấy mã", "error");
+      return;
+    }
+    if (phoneDigits.length !== 10) {
+      setStatus("SĐT phải đủ 10 số", "error");
       return;
     }
     isSubmitting = true;
@@ -137,9 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
     getCodeBtn.disabled = true;
     try {
       const data = await callApi("/api/register", { name, phone });
-      const code = (data.code || "").toString().toUpperCase();
-      if (codeInput) codeInput.value = code;
-      setStatus(`Mã của bạn: ${code}`);
+      verifiedCode = (data.code || "").toString().toUpperCase();
+      setStatus(data.reused ? "Bạn đã có mã, hệ thống dùng lại mã cũ." : "Liên hệ với DEVPO để nhận mã và xác thực lượt quay.");
+      await handleVerifyCode({ skipInput: true });
     } catch (err) {
       setStatus(err.message, "error");
     } finally {
@@ -148,11 +152,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function handleVerifyCode() {
+  async function handleVerifyCode(options = {}) {
     if (isSubmitting) return;
-    const code = codeInput?.value.trim().toUpperCase();
+    const useStoredOnly = options.skipInput === true;
+    const codeFromInput = codeInput?.value.trim().toUpperCase();
+    const code = verifiedCode || (useStoredOnly ? null : codeFromInput);
     if (!code || code.length < 4) {
-      setStatus("Nhập mã 6 ký tự", "error");
+      setStatus("Hệ thống chưa nhận được mã, hãy bấm Lấy mã", "error");
       return;
     }
     isSubmitting = true;
@@ -163,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await callApi("/api/redeem", { code });
       verifiedCode = code;
       setDrawButtonState(false, "GIEO QUẺ NGAY");
-      setStatus("Mã hợp lệ, bạn có 1 lượt quay!");
+      setStatus("Xác nhận mã thành công, bạn có 1 lượt quay.");
     } catch (err) {
       verifiedCode = null;
       setStatus(err.message, "error");
@@ -183,6 +189,9 @@ document.addEventListener("DOMContentLoaded", () => {
         name: nameInput?.value?.trim() || "",
         phone: phoneInput?.value?.trim() || ""
       });
+      verifiedCode = null;
+      setDrawButtonState(true, "ĐÃ QUAY");
+      setStatus("Bạn đã dùng hết lượt quay.");
     } catch (err) {
       // Chỉ log lỗi, không chặn UI
       console.warn("Không ghi được voucher:", err.message);
@@ -195,9 +204,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Lock the button sequence: GIEO QUẺ NGAY -> Đang gieo quẻ... -> ĐÃ GIEO
+    setDrawButtonState(true, "Đang gieo quẻ...");
+
     if (fortuneScene) {
       fortuneScene.classList.add("spinning");
-      setTimeout(() => fortuneScene.classList.remove("spinning"), 1000);
+      setTimeout(() => fortuneScene.classList.remove("spinning"), 3000);
     }
 
     triggerShake();
@@ -206,27 +218,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const voucher = weightedPick(vouchers);
       openModal(voucher);
       logVoucher(voucher);
-      setDrawButtonState(true, "ĐÃ QUAY");
-    }, 1000);
+      setDrawButtonState(true, "Đã gieo");
+    }, 3000);
   }
 
   drawBtn.addEventListener("click", handleDraw);
   closeBtn.addEventListener("click", closeModal);
   overlay.addEventListener("click", closeModal);
   getCodeBtn.addEventListener("click", handleGetCode);
-  verifyCodeBtn.addEventListener("click", handleVerifyCode);
+  verifyCodeBtn.addEventListener("click", () => handleVerifyCode());
 
   ruleBtn.addEventListener("click", () => {
     rulesSection.scrollIntoView({ behavior: "smooth" });
   });
 
-  claimZaloBtn.addEventListener("click", () => {
-    window.open("https://zalo.me/", "_blank");
-  });
-
-  checkoutBtn.addEventListener("click", () => {
-    window.open("https://www.apple.com/vn/iphone/", "_blank");
-  });
+  closeModalActionBtn.addEventListener("click", closeModal);
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && modal.classList.contains("show")) {

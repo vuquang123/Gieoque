@@ -42,7 +42,7 @@
               </label>
               <button class="btn ghost code-form__btn" id="getCodeBtn" type="button">LẤY MÃ</button>
             </div>
-            <div class="code-form__row">
+            <div class="code-form__row" data-code-row hidden>
               <label class="code-form__field code-form__field--code">
                 <span>Mã code</span>
                 <input id="customerCode" type="text" placeholder="Nhập mã 6 ký tự" maxlength="6" autocapitalize="characters">
@@ -50,6 +50,7 @@
               <button class="btn primary code-form__btn" id="verifyCodeBtn" type="button">XÁC THỰC MÃ</button>
             </div>
             <p class="code-form__status" id="formStatus" role="status" aria-live="polite"></p>
+            <p class="code-form__note"></p>
           </section>
           <div class="fomo" id="fomoTicker" aria-live="polite"></div>
           <section class="rules rules--inline" id="rules">
@@ -112,8 +113,7 @@
         <div class="envelope__spark"></div>
       </div>
       <div class="modal__actions">
-        <button class="btn primary" id="claimZalo">NHẬN VOUCHER QUA ZALO</button>
-        <button class="btn ghost" id="checkoutNow">CHỐT MÁY NGAY</button>
+        <button class="btn primary" id="closeModalAction">ĐÓNG</button>
       </div>
     </div>
   </div>
