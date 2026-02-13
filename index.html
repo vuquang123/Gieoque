@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gieo Quẻ Ất Tỵ – DEV PỒ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-texture"></div>
+  <div class="sparkles" aria-hidden="true"></div>
+  <div class="fireworks" aria-hidden="true">
+    <div class="firework f1"></div>
+    <div class="firework f2"></div>
+    <div class="firework f3"></div>
+  </div>
+
+  <main class="shell">
+    <div class="hero">
+      <button class="btn ghost rule-fab" id="ruleBtn" aria-label="Xem thể lệ">
+        <img class="rule-fab__logo" src="logo_devpo.png" alt="DEV PỒ">
+      </button>
+      <div class="hero__headline">
+        <h1>GIEO QUẺ BÍNH NGỌ – GIẢM GIÁ PHI MÃ</h1>
+        <p class="lede">Mini game gieo quẻ liền tay, rước lì xì khủng để sắm iPhone tại DEV PỒ.</p>
+        <p class="voucher-copy" aria-hidden="true">🎁 Lì xì ngẫu nhiên 100.000đ hoặc 200.000đ</p>
+      </div>
+      <div class="hero__layout">
+        <aside class="hero__side">
+          <section class="code-form" aria-label="Đăng ký và xác thực mã quay">
+            <div class="code-form__row">
+              <label class="code-form__field">
+                <span>Họ tên</span>
+                <input id="customerName" type="text" placeholder="Nhập họ tên" autocomplete="name">
+              </label>
+              <label class="code-form__field">
+                <span>Số điện thoại</span>
+                <input id="customerPhone" type="tel" placeholder="Nhập SĐT" autocomplete="tel" inputmode="tel">
+              </label>
+              <button class="btn ghost code-form__btn" id="getCodeBtn" type="button">LẤY MÃ</button>
+            </div>
+            <div class="code-form__row">
+              <label class="code-form__field code-form__field--code">
+                <span>Mã code</span>
+                <input id="customerCode" type="text" placeholder="Nhập mã 6 ký tự" maxlength="6" autocapitalize="characters">
+              </label>
+              <button class="btn primary code-form__btn" id="verifyCodeBtn" type="button">XÁC THỰC MÃ</button>
+            </div>
+            <p class="code-form__status" id="formStatus" role="status" aria-live="polite"></p>
+          </section>
+          <div class="fomo" id="fomoTicker" aria-live="polite"></div>
+          <section class="rules rules--inline" id="rules">
+            <h2>Thể lệ mini game</h2>
+            <ol>
+              <li>Nhấn “Gieo Quẻ Ngay” để mở lì xì may mắn.</li>
+              <li>Mỗi lượt nhận ngẫu nhiên 1 voucher từ 100.000đ đến 800.000đ.</li>
+              <li>Dùng voucher khi mua iPhone tại DEV PỒ trong Tết Ất Tỵ 2026.</li>
+            </ol>
+            <p class="note">Lì xì chỉ dành cho khách hàng mới mỗi ngày • Số lượng có hạn • Áp dụng song song ưu đãi cửa hàng.</p>
+          </section>
+        </aside>
+        <div class="hero__main">
+          <section class="FortuneBox" aria-hidden="true">
+            <div class="fortune-box__shadow"></div>
+            <div class="fortune-box__glow"></div>
+            <div class="fortune-box__coins">
+              <span class="coin coin--1"></span>
+              <span class="coin coin--2"></span>
+              <span class="coin coin--3"></span>
+              <span class="coin coin--4"></span>
+              <span class="coin coin--5"></span>
+              <span class="coin coin--6"></span>
+            </div>
+            <div class="fortune-box__sparks">
+              <span class="spark s1"></span>
+              <span class="spark s2"></span>
+              <span class="spark s3"></span>
+            </div>
+            <div class="fortune-box__scene">
+              <div class="fortune-cylinder">
+                <img class="fortune-box__image" src="Hộp quẻ.svg" alt="Hộp quẻ may mắn" loading="lazy">
+              </div>
+              <div class="horse" aria-hidden="true">
+                <img src="vector-ngua-chibi-mua-lan-tet-binh-ngo-2026-4-696x696.png" alt="Linh vật ngựa vàng cầm bao lì xì" loading="lazy">
+              </div>
+            </div>
+          </section>
+          <div class="actions">
+            <button class="btn primary" id="drawBtn" disabled>GIEO QUẺ NGAY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal" id="voucherModal" aria-hidden="true">
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="voucherTitle">
+      <button class="modal__close" id="closeModal" aria-label="Đóng">×</button>
+      <div class="envelope" id="envelope">
+        <div class="envelope__top"></div>
+        <div class="envelope__body">
+          <div class="envelope__shine"></div>
+          <p class="envelope__title" id="voucherTitle">Lì xì may mắn</p>
+          <p class="envelope__amount" id="voucherAmount">---</p>
+          <p class="envelope__message" id="voucherMessage">Hãy gieo quẻ để xem quà!</p>
+          <p class="envelope__wish" id="voucherWish">Chúc Tết tưng bừng – trúng quẻ siêu hời!</p>
+        </div>
+        <div class="envelope__spark"></div>
+      </div>
+      <div class="modal__actions">
+        <button class="btn primary" id="claimZalo">NHẬN VOUCHER QUA ZALO</button>
+        <button class="btn ghost" id="checkoutNow">CHỐT MÁY NGAY</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
