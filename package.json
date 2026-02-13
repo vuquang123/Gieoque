@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx vercel dev --yes --listen 3000"
+    "dev": "echo Run 'vercel dev --yes --listen 3000' directly to avoid recursion",
+    "vercel-dev": "vercel dev --yes --listen 3000"
   },
   "dependencies": {
     "google-auth-library": "^9.14.1"
