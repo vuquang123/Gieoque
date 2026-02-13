@@ -179,7 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
       await callApi("/api/log-voucher", {
         code: verifiedCode,
         amount: voucher.amount,
-        message: voucher.message
+        message: voucher.message,
+        name: nameInput?.value?.trim() || "",
+        phone: phoneInput?.value?.trim() || ""
       });
     } catch (err) {
       // Chỉ log lỗi, không chặn UI
